@@ -1,5 +1,6 @@
 package com.james.composegettingstarted
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,10 +9,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,38 +31,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MessageCard(msg = Message("Android", "Jetpack Compose"))
-            /*ComposeGettingStartedTheme {a
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            ComposeGettingStartedTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    MessageCard(msg = Message("Android", "Jetpack Compose"))
                 }
-            }*/
+            }
         }
     }
 }
 
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-//@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ComposeGettingStartedTheme {
-        Greeting("Android")
-    }
-}
-
 object Fixtures {
-
     object Greeting {
         val name = "James"
         val saluate = "Hello"
@@ -76,32 +59,55 @@ data class Message(val author: String, val body: String)
 @Composable
 fun MessageCard(msg: Message) {
     Row(
-        Modifier.padding(all = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        Modifier.padding(all = 8.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_background),
             contentDescription = Fixtures.Image.contentDescription,
             modifier = Modifier
-                .size(40.dp)
+                .size(50.dp)
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(text = "${Fixtures.Greeting.saluate}, ${msg.author}")
+        Column(
+            Modifier.padding(all = 8.dp),
+        ) {
+            Text(
+                text = "${Fixtures.Greeting.saluate}, ${msg.author}",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium
+            )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = msg.body)
+
+            Text(
+                text = msg.body,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium
+            )
+
         }
     }
 }
 
-@Preview(showBackground = true)
+
+@Preview(
+    name = "Light Mode",
+)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
 @Composable
-fun PreviewMessageCard() {
-    MessageCard(
-        msg = Message(
-            Fixtures.Greeting.name,
-            Fixtures.Greeting.longDescription
-        )
-    )
+fun PreviewMessageCardLight() {
+    ComposeGettingStartedTheme {
+        Surface {
+            MessageCard(
+                msg = Message(
+                    Fixtures.Greeting.name, Fixtures.Greeting.longDescription
+                )
+            )
+        }
+
+    }
 }
